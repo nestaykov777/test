@@ -16,22 +16,93 @@ var _jsxruntime = __webpack_require__(14056);
 var _expostatusbar = __webpack_require__(21650);
 var _reactnative = __webpack_require__(25472);
 var _mymodule = __webpack_require__(19979);
+var _OtaGate = __webpack_require__(52810);
 function App() {
-    return /*#__PURE__*/ (0, _jsxruntime.jsxs)(_reactnative.View, {
-        style: styles.container,
+    return /*#__PURE__*/ (0, _jsxruntime.jsx)(_OtaGate.OtaGate, {
+        children: /*#__PURE__*/ (0, _jsxruntime.jsxs)(_reactnative.View, {
+            style: styles.container,
+            children: [
+                /*#__PURE__*/ (0, _jsxruntime.jsx)(_reactnative.Text, {
+                    children: "Open up App.tsx to start working on your app!"
+                }),
+                /*#__PURE__*/ (0, _jsxruntime.jsxs)(_reactnative.Text, {
+                    children: [
+                        "my-module multiply(3, 7) = ",
+                        (0, _mymodule.multiply)(3, 7)
+                    ]
+                }),
+                /*#__PURE__*/ (0, _jsxruntime.jsx)(_expostatusbar.StatusBar, {
+                    style: "auto"
+                })
+            ]
+        })
+    });
+}
+var styles = _reactnative.StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
+});
+
+
+}),
+52810: (function (__unused_rspack_module, exports, __webpack_require__) {
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "OtaGate", ({
+    enumerable: true,
+    get: function() {
+        return OtaGate;
+    }
+}));
+var _sliced_to_array = __webpack_require__(30703);
+var _jsxruntime = __webpack_require__(14056);
+var _react = __webpack_require__(73364);
+var _reactnative = __webpack_require__(25472);
+var _ota = __webpack_require__(95513);
+function OtaGate(ref) {
+    var children = ref.children;
+    var _useState = _sliced_to_array._((0, _react.useState)('checking'), 2), status = _useState[0], setStatus = _useState[1];
+    var _useState1 = _sliced_to_array._((0, _react.useState)(null), 2), debugError = _useState1[0], setDebugError = _useState1[1];
+    (0, _react.useEffect)(()=>{
+        (0, _ota.checkAndApplyUpdate)().then((ref)=>{
+            var updated = ref.updated;
+            if (updated) {
+                _reactnative.DevSettings.reload();
+                return;
+            }
+            setStatus('ready');
+        }).catch((error)=>{
+            console.warn('OTA check failed, continuing with current bundle', error);
+            setDebugError(String(error?.message ?? error));
+            setStatus('ready');
+        });
+    }, []);
+    if (status === 'checking') {
+        return /*#__PURE__*/ (0, _jsxruntime.jsxs)(_reactnative.View, {
+            style: styles.container,
+            children: [
+                /*#__PURE__*/ (0, _jsxruntime.jsx)(_reactnative.ActivityIndicator, {
+                    size: "large"
+                }),
+                /*#__PURE__*/ (0, _jsxruntime.jsx)(_reactnative.Text, {
+                    style: styles.text,
+                    children: "Checking for updates…"
+                })
+            ]
+        });
+    }
+    return /*#__PURE__*/ (0, _jsxruntime.jsxs)(_jsxruntime.Fragment, {
         children: [
-            /*#__PURE__*/ (0, _jsxruntime.jsx)(_reactnative.Text, {
-                children: "Open up App.tsx to start working on your app!"
-            }),
-            /*#__PURE__*/ (0, _jsxruntime.jsxs)(_reactnative.Text, {
-                children: [
-                    "my-module multiply(3, 7) = ",
-                    (0, _mymodule.multiply)(3, 7)
-                ]
-            }),
-            /*#__PURE__*/ (0, _jsxruntime.jsx)(_expostatusbar.StatusBar, {
-                style: "auto"
-            })
+            children,
+            debugError ? /*#__PURE__*/ (0, _jsxruntime.jsx)(_reactnative.Text, {
+                style: styles.debugError,
+                children: debugError
+            }) : null
         ]
     });
 }
@@ -41,6 +112,17 @@ var styles = _reactnative.StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    text: {
+        marginTop: 12
+    },
+    debugError: {
+        position: 'absolute',
+        bottom: 40,
+        left: 12,
+        right: 12,
+        color: 'red',
+        fontSize: 12
     }
 });
 
@@ -6936,6 +7018,680 @@ function eventTargetAgnosticAddListener(emitter, name, listener, flags) {
         throw new TypeError('The "emitter" argument must be of type EventEmitter. Received type ' + typeof emitter);
     }
 }
+
+
+}),
+45695: (function (__unused_rspack_module, exports, __webpack_require__) {
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "default", ({
+    enumerable: true,
+    get: function() {
+        return _default;
+    }
+}));
+var _interop_require_default = __webpack_require__(95462);
+var _expomodulescore = __webpack_require__(97160);
+var _ExponentFileSystemShim = /*#__PURE__*/ _interop_require_default._(__webpack_require__(99010));
+var _default = (0, _expomodulescore.requireOptionalNativeModule)('ExponentFileSystem') ?? _ExponentFileSystemShim.default;
+
+
+}),
+99010: (function (__unused_rspack_module, exports, __webpack_require__) {
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "default", ({
+    enumerable: true,
+    get: function() {
+        return FileSystemShim;
+    }
+}));
+var _call_super = __webpack_require__(18201);
+var _class_call_check = __webpack_require__(54359);
+var _inherits = __webpack_require__(27653);
+var _expomodulescore = __webpack_require__(97160);
+var FileSystemShim = /*#__PURE__*/ function(NativeModule) {
+    "use strict";
+    _inherits._(FileSystemShim, NativeModule);
+    function FileSystemShim() {
+        _class_call_check._(this, FileSystemShim);
+        var _this;
+        _this = _call_super._(this, FileSystemShim, arguments), _this.documentDirectory = null, _this.cacheDirectory = null, _this.bundleDirectory = null;
+        return _this;
+    }
+    return FileSystemShim;
+}(_expomodulescore.NativeModule);
+
+
+}),
+82160: (function (__unused_rspack_module, exports, __webpack_require__) {
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: Object.getOwnPropertyDescriptor(all, name).get
+    });
+}
+_export(exports, {
+    get DownloadResumable () {
+        return DownloadResumable;
+    },
+    get FileSystemCancellableNetworkTask () {
+        return FileSystemCancellableNetworkTask;
+    },
+    get StorageAccessFramework () {
+        return StorageAccessFramework;
+    },
+    get UploadTask () {
+        return UploadTask;
+    },
+    get bundleDirectory () {
+        return bundleDirectory;
+    },
+    get cacheDirectory () {
+        return cacheDirectory;
+    },
+    get copyAsync () {
+        return copyAsync;
+    },
+    get createDownloadResumable () {
+        return createDownloadResumable;
+    },
+    get createUploadTask () {
+        return createUploadTask;
+    },
+    get deleteAsync () {
+        return deleteAsync;
+    },
+    get deleteLegacyDocumentDirectoryAndroid () {
+        return deleteLegacyDocumentDirectoryAndroid;
+    },
+    get documentDirectory () {
+        return documentDirectory;
+    },
+    get downloadAsync () {
+        return downloadAsync;
+    },
+    get getContentUriAsync () {
+        return getContentUriAsync;
+    },
+    get getFreeDiskStorageAsync () {
+        return getFreeDiskStorageAsync;
+    },
+    get getInfoAsync () {
+        return getInfoAsync;
+    },
+    get getTotalDiskCapacityAsync () {
+        return getTotalDiskCapacityAsync;
+    },
+    get makeDirectoryAsync () {
+        return makeDirectoryAsync;
+    },
+    get moveAsync () {
+        return moveAsync;
+    },
+    get readAsStringAsync () {
+        return readAsStringAsync;
+    },
+    get readDirectoryAsync () {
+        return readDirectoryAsync;
+    },
+    get uploadAsync () {
+        return uploadAsync;
+    },
+    get writeAsStringAsync () {
+        return writeAsStringAsync;
+    }
+});
+var _async_to_generator = __webpack_require__(41119);
+var _call_super = __webpack_require__(18201);
+var _class_call_check = __webpack_require__(54359);
+var _create_class = __webpack_require__(57880);
+var _inherits = __webpack_require__(27653);
+var _interop_require_default = __webpack_require__(95462);
+var _object_spread = __webpack_require__(3334);
+var _object_spread_props = __webpack_require__(5801);
+var _expomodulescore = __webpack_require__(97160);
+var _reactnative = __webpack_require__(25472);
+var _ExponentFileSystem = /*#__PURE__*/ _interop_require_default._(__webpack_require__(45695));
+var _FileSystemtypes = __webpack_require__(69027);
+if (!_ExponentFileSystem.default) {
+    console.warn("No native ExponentFileSystem module found, are you sure the expo-file-system's module is linked properly?");
+}
+function normalizeEndingSlash(p) {
+    if (p != null) {
+        return p.replace(/\/*$/, '') + '/';
+    }
+    return null;
+}
+var documentDirectory = normalizeEndingSlash(_ExponentFileSystem.default.documentDirectory);
+var cacheDirectory = normalizeEndingSlash(_ExponentFileSystem.default.cacheDirectory);
+var bundleDirectory = normalizeEndingSlash(_ExponentFileSystem.default.bundleDirectory);
+function getInfoAsync(_0) {
+    return _async_to_generator._(function*(fileUri, ref) {
+        var options = ref === void 0 ? {} : ref;
+        if (!_ExponentFileSystem.default.getInfoAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'getInfoAsync');
+        }
+        return yield _ExponentFileSystem.default.getInfoAsync(fileUri, options);
+    }).apply(this, arguments);
+}
+function readAsStringAsync(_0) {
+    return _async_to_generator._(function*(fileUri, ref) {
+        var options = ref === void 0 ? {} : ref;
+        if (!_ExponentFileSystem.default.readAsStringAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'readAsStringAsync');
+        }
+        return yield _ExponentFileSystem.default.readAsStringAsync(fileUri, options);
+    }).apply(this, arguments);
+}
+function getContentUriAsync(fileUri) {
+    return _async_to_generator._(function*() {
+        if (_reactnative.Platform.OS === 'android') {
+            if (!_ExponentFileSystem.default.getContentUriAsync) {
+                throw new _expomodulescore.UnavailabilityError('expo-file-system', 'getContentUriAsync');
+            }
+            return yield _ExponentFileSystem.default.getContentUriAsync(fileUri);
+        } else {
+            return fileUri;
+        }
+    })();
+}
+function writeAsStringAsync(_0, _1) {
+    return _async_to_generator._(function*(fileUri, contents, ref) {
+        var options = ref === void 0 ? {} : ref;
+        if (!_ExponentFileSystem.default.writeAsStringAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'writeAsStringAsync');
+        }
+        return yield _ExponentFileSystem.default.writeAsStringAsync(fileUri, contents, options);
+    }).apply(this, arguments);
+}
+function deleteAsync(_0) {
+    return _async_to_generator._(function*(fileUri, ref) {
+        var options = ref === void 0 ? {} : ref;
+        if (!_ExponentFileSystem.default.deleteAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'deleteAsync');
+        }
+        return yield _ExponentFileSystem.default.deleteAsync(fileUri, options);
+    }).apply(this, arguments);
+}
+function deleteLegacyDocumentDirectoryAndroid() {
+    return _async_to_generator._(function*() {
+        if (_reactnative.Platform.OS !== 'android' || documentDirectory == null) {
+            return;
+        }
+        var legacyDocumentDirectory = `${documentDirectory}ExperienceData/`;
+        return yield deleteAsync(legacyDocumentDirectory, {
+            idempotent: true
+        });
+    })();
+}
+function moveAsync(options) {
+    return _async_to_generator._(function*() {
+        if (!_ExponentFileSystem.default.moveAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'moveAsync');
+        }
+        return yield _ExponentFileSystem.default.moveAsync(options);
+    })();
+}
+function copyAsync(options) {
+    return _async_to_generator._(function*() {
+        if (!_ExponentFileSystem.default.copyAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'copyAsync');
+        }
+        return yield _ExponentFileSystem.default.copyAsync(options);
+    })();
+}
+function makeDirectoryAsync(_0) {
+    return _async_to_generator._(function*(fileUri, ref) {
+        var options = ref === void 0 ? {} : ref;
+        if (!_ExponentFileSystem.default.makeDirectoryAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'makeDirectoryAsync');
+        }
+        return yield _ExponentFileSystem.default.makeDirectoryAsync(fileUri, options);
+    }).apply(this, arguments);
+}
+function readDirectoryAsync(fileUri) {
+    return _async_to_generator._(function*() {
+        if (!_ExponentFileSystem.default.readDirectoryAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'readDirectoryAsync');
+        }
+        return yield _ExponentFileSystem.default.readDirectoryAsync(fileUri);
+    })();
+}
+function getFreeDiskStorageAsync() {
+    return _async_to_generator._(function*() {
+        if (!_ExponentFileSystem.default.getFreeDiskStorageAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'getFreeDiskStorageAsync');
+        }
+        return yield _ExponentFileSystem.default.getFreeDiskStorageAsync();
+    })();
+}
+function getTotalDiskCapacityAsync() {
+    return _async_to_generator._(function*() {
+        if (!_ExponentFileSystem.default.getTotalDiskCapacityAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'getTotalDiskCapacityAsync');
+        }
+        return yield _ExponentFileSystem.default.getTotalDiskCapacityAsync();
+    })();
+}
+function downloadAsync(_0, _1) {
+    return _async_to_generator._(function*(uri, fileUri, ref) {
+        var options = ref === void 0 ? {} : ref;
+        if (!_ExponentFileSystem.default.downloadAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'downloadAsync');
+        }
+        return yield _ExponentFileSystem.default.downloadAsync(uri, fileUri, _object_spread._({
+            sessionType: _FileSystemtypes.FileSystemSessionType.BACKGROUND
+        }, options));
+    }).apply(this, arguments);
+}
+function uploadAsync(_0, _1) {
+    return _async_to_generator._(function*(url, fileUri, ref) {
+        var options = ref === void 0 ? {} : ref;
+        if (!_ExponentFileSystem.default.uploadAsync) {
+            throw new _expomodulescore.UnavailabilityError('expo-file-system', 'uploadAsync');
+        }
+        return yield _ExponentFileSystem.default.uploadAsync(url, fileUri, _object_spread_props._(_object_spread._({
+            sessionType: _FileSystemtypes.FileSystemSessionType.BACKGROUND,
+            uploadType: _FileSystemtypes.FileSystemUploadType.BINARY_CONTENT
+        }, options), {
+            httpMethod: (options.httpMethod || 'POST').toUpperCase()
+        }));
+    }).apply(this, arguments);
+}
+function createDownloadResumable(uri, fileUri, options, callback, resumeData) {
+    return new DownloadResumable(uri, fileUri, options, callback, resumeData);
+}
+function createUploadTask(url, fileUri, options, callback) {
+    return new UploadTask(url, fileUri, options, callback);
+}
+var FileSystemCancellableNetworkTask = /*#__PURE__*/ function() {
+    "use strict";
+    function FileSystemCancellableNetworkTask() {
+        _class_call_check._(this, FileSystemCancellableNetworkTask);
+        this._uuid = _expomodulescore.uuid.v4();
+        this.taskWasCanceled = false;
+    }
+    _create_class._(FileSystemCancellableNetworkTask, [
+        {
+            key: "cancelAsync",
+            value: // @docsMissing
+            function cancelAsync() {
+                return _async_to_generator._(function*() {
+                    if (!_ExponentFileSystem.default.networkTaskCancelAsync) {
+                        throw new _expomodulescore.UnavailabilityError('expo-file-system', 'networkTaskCancelAsync');
+                    }
+                    this.removeSubscription();
+                    this.taskWasCanceled = true;
+                    return yield _ExponentFileSystem.default.networkTaskCancelAsync(this.uuid);
+                }).call(this);
+            }
+        },
+        {
+            key: "isTaskCancelled",
+            value: function isTaskCancelled() {
+                if (this.taskWasCanceled) {
+                    console.warn('This task was already canceled.');
+                    return true;
+                }
+                return false;
+            }
+        },
+        {
+            key: "uuid",
+            get: function() {
+                return this._uuid;
+            }
+        },
+        {
+            key: "addSubscription",
+            value: function addSubscription() {
+                if (this.subscription) {
+                    return;
+                }
+                this.subscription = _ExponentFileSystem.default.addListener(this.getEventName(), (event)=>{
+                    if (event.uuid === this.uuid) {
+                        var callback = this.getCallback();
+                        if (callback) {
+                            callback(event.data);
+                        }
+                    }
+                });
+            }
+        },
+        {
+            key: "removeSubscription",
+            value: function removeSubscription() {
+                if (!this.subscription) {
+                    return;
+                }
+                this.subscription.remove();
+                this.subscription = null;
+            }
+        }
+    ]);
+    return FileSystemCancellableNetworkTask;
+}();
+var UploadTask = /*#__PURE__*/ function(FileSystemCancellableNetworkTask) {
+    "use strict";
+    _inherits._(UploadTask, FileSystemCancellableNetworkTask);
+    function UploadTask(url, fileUri, options, callback) {
+        _class_call_check._(this, UploadTask);
+        var _this;
+        _this = _call_super._(this, UploadTask), _this.url = url, _this.fileUri = fileUri, _this.callback = callback;
+        var httpMethod = options?.httpMethod?.toUpperCase() || 'POST';
+        _this.options = _object_spread_props._(_object_spread._({
+            sessionType: _FileSystemtypes.FileSystemSessionType.BACKGROUND,
+            uploadType: _FileSystemtypes.FileSystemUploadType.BINARY_CONTENT
+        }, options), {
+            httpMethod
+        });
+        return _this;
+    }
+    _create_class._(UploadTask, [
+        {
+            key: "getEventName",
+            value: function getEventName() {
+                return 'expo-file-system.uploadProgress';
+            }
+        },
+        {
+            key: "getCallback",
+            value: function getCallback() {
+                return this.callback;
+            }
+        },
+        {
+            key: "uploadAsync",
+            value: // @docsMissing
+            function uploadAsync() {
+                return _async_to_generator._(function*() {
+                    if (!_ExponentFileSystem.default.uploadTaskStartAsync) {
+                        throw new _expomodulescore.UnavailabilityError('expo-file-system', 'uploadTaskStartAsync');
+                    }
+                    if (this.isTaskCancelled()) {
+                        return;
+                    }
+                    this.addSubscription();
+                    var result = yield _ExponentFileSystem.default.uploadTaskStartAsync(this.url, this.fileUri, this.uuid, this.options);
+                    this.removeSubscription();
+                    return result;
+                }).call(this);
+            }
+        }
+    ]);
+    return UploadTask;
+}(FileSystemCancellableNetworkTask);
+var DownloadResumable = /*#__PURE__*/ function(FileSystemCancellableNetworkTask) {
+    "use strict";
+    _inherits._(DownloadResumable, FileSystemCancellableNetworkTask);
+    function DownloadResumable(url, _fileUri, ref, callback, resumeData) {
+        var options = ref === void 0 ? {} : ref;
+        _class_call_check._(this, DownloadResumable);
+        var _this;
+        _this = _call_super._(this, DownloadResumable), _this.url = url, _this._fileUri = _fileUri, _this.options = options, _this.callback = callback, _this.resumeData = resumeData;
+        return _this;
+    }
+    _create_class._(DownloadResumable, [
+        {
+            key: "fileUri",
+            get: function() {
+                return this._fileUri;
+            }
+        },
+        {
+            key: "getEventName",
+            value: function getEventName() {
+                return 'expo-file-system.downloadProgress';
+            }
+        },
+        {
+            key: "getCallback",
+            value: function getCallback() {
+                return this.callback;
+            }
+        },
+        {
+            key: "downloadAsync",
+            value: /**
+   * Download the contents at a remote URI to a file in the app's file system.
+   * @return Returns a Promise that resolves to `FileSystemDownloadResult` object, or to `undefined` when task was cancelled.
+   */ function downloadAsync() {
+                return _async_to_generator._(function*() {
+                    if (!_ExponentFileSystem.default.downloadResumableStartAsync) {
+                        throw new _expomodulescore.UnavailabilityError('expo-file-system', 'downloadResumableStartAsync');
+                    }
+                    if (this.isTaskCancelled()) {
+                        return;
+                    }
+                    this.addSubscription();
+                    return yield _ExponentFileSystem.default.downloadResumableStartAsync(this.url, this._fileUri, this.uuid, this.options, this.resumeData);
+                }).call(this);
+            }
+        },
+        {
+            key: "pauseAsync",
+            value: /**
+   * Pause the current download operation. `resumeData` is added to the `DownloadResumable` object after a successful pause operation.
+   * Returns an object that can be saved with `AsyncStorage` for future retrieval (the same object that is returned from calling `FileSystem.DownloadResumable.savable()`).
+   * @return Returns a Promise that resolves to `DownloadPauseState` object.
+   */ function pauseAsync() {
+                return _async_to_generator._(function*() {
+                    if (!_ExponentFileSystem.default.downloadResumablePauseAsync) {
+                        throw new _expomodulescore.UnavailabilityError('expo-file-system', 'downloadResumablePauseAsync');
+                    }
+                    if (this.isTaskCancelled()) {
+                        return {
+                            fileUri: this._fileUri,
+                            options: this.options,
+                            url: this.url
+                        };
+                    }
+                    var pauseResult = yield _ExponentFileSystem.default.downloadResumablePauseAsync(this.uuid);
+                    this.removeSubscription();
+                    if (pauseResult) {
+                        this.resumeData = pauseResult.resumeData;
+                        return this.savable();
+                    } else {
+                        throw new Error('Unable to generate a savable pause state');
+                    }
+                }).call(this);
+            }
+        },
+        {
+            key: "resumeAsync",
+            value: /**
+   * Resume a paused download operation.
+   * @return Returns a Promise that resolves to `FileSystemDownloadResult` object, or to `undefined` when task was cancelled.
+   */ function resumeAsync() {
+                return _async_to_generator._(function*() {
+                    if (!_ExponentFileSystem.default.downloadResumableStartAsync) {
+                        throw new _expomodulescore.UnavailabilityError('expo-file-system', 'downloadResumableStartAsync');
+                    }
+                    if (this.isTaskCancelled()) {
+                        return;
+                    }
+                    this.addSubscription();
+                    return yield _ExponentFileSystem.default.downloadResumableStartAsync(this.url, this.fileUri, this.uuid, this.options, this.resumeData);
+                }).call(this);
+            }
+        },
+        {
+            /**
+   * Method to get the object which can be saved with `AsyncStorage` for future retrieval.
+   * @returns Returns object in shape of `DownloadPauseState` type.
+   */ key: "savable",
+            value: function savable() {
+                return {
+                    url: this.url,
+                    fileUri: this.fileUri,
+                    options: this.options,
+                    resumeData: this.resumeData
+                };
+            }
+        }
+    ]);
+    return DownloadResumable;
+}(FileSystemCancellableNetworkTask);
+var baseReadAsStringAsync = readAsStringAsync;
+var baseWriteAsStringAsync = writeAsStringAsync;
+var baseDeleteAsync = deleteAsync;
+var baseMoveAsync = moveAsync;
+var baseCopyAsync = copyAsync;
+(function(StorageAccessFramework) {
+    function getUriForDirectoryInRoot(folderName) {
+        return `content://com.android.externalstorage.documents/tree/primary:${folderName}/document/primary:${folderName}`;
+    }
+    /**
+   * Gets a [SAF URI](#saf-uri) pointing to a folder in the Android root directory. You can use this function to get URI for
+   * `StorageAccessFramework.requestDirectoryPermissionsAsync()` when you trying to migrate an album. In that case, the name of the album is the folder name.
+   * @param folderName The name of the folder which is located in the Android root directory.
+   * @return Returns a [SAF URI](#saf-uri) to a folder.
+   * @platform Android
+   */ StorageAccessFramework.getUriForDirectoryInRoot = getUriForDirectoryInRoot;
+    function requestDirectoryPermissionsAsync(ref) {
+        var initialFileUrl = ref === void 0 ? null : ref;
+        return _async_to_generator._(function*() {
+            if (!_ExponentFileSystem.default.requestDirectoryPermissionsAsync) {
+                throw new _expomodulescore.UnavailabilityError('expo-file-system', 'StorageAccessFramework.requestDirectoryPermissionsAsync');
+            }
+            return yield _ExponentFileSystem.default.requestDirectoryPermissionsAsync(initialFileUrl);
+        })();
+    }
+    /**
+   * Allows users to select a specific directory, granting your app access to all of the files and sub-directories within that directory.
+   * @param initialFileUrl The [SAF URI](#saf-uri) of the directory that the file picker should display when it first loads.
+   * If URI is incorrect or points to a non-existing folder, it's ignored.
+   * @platform android 11+
+   * @return Returns a Promise that resolves to `FileSystemRequestDirectoryPermissionsResult` object.
+   */ StorageAccessFramework.requestDirectoryPermissionsAsync = requestDirectoryPermissionsAsync;
+    function readDirectoryAsync(dirUri) {
+        return _async_to_generator._(function*() {
+            if (!_ExponentFileSystem.default.readSAFDirectoryAsync) {
+                throw new _expomodulescore.UnavailabilityError('expo-file-system', 'StorageAccessFramework.readDirectoryAsync');
+            }
+            return yield _ExponentFileSystem.default.readSAFDirectoryAsync(dirUri);
+        })();
+    }
+    /**
+   * Enumerate the contents of a directory.
+   * @param dirUri [SAF](#saf-uri) URI to the directory.
+   * @return A Promise that resolves to an array of strings, each containing the full [SAF URI](#saf-uri) of a file or directory contained in the directory at `fileUri`.
+   * @platform Android
+   */ StorageAccessFramework.readDirectoryAsync = readDirectoryAsync;
+    function makeDirectoryAsync(parentUri, dirName) {
+        return _async_to_generator._(function*() {
+            if (!_ExponentFileSystem.default.makeSAFDirectoryAsync) {
+                throw new _expomodulescore.UnavailabilityError('expo-file-system', 'StorageAccessFramework.makeDirectoryAsync');
+            }
+            return yield _ExponentFileSystem.default.makeSAFDirectoryAsync(parentUri, dirName);
+        })();
+    }
+    /**
+   * Creates a new empty directory.
+   * @param parentUri The [SAF](#saf-uri) URI to the parent directory.
+   * @param dirName The name of new directory.
+   * @return A Promise that resolves to a [SAF URI](#saf-uri) to the created directory.
+   * @platform Android
+   */ StorageAccessFramework.makeDirectoryAsync = makeDirectoryAsync;
+    function createFileAsync(parentUri, fileName, mimeType) {
+        return _async_to_generator._(function*() {
+            if (!_ExponentFileSystem.default.createSAFFileAsync) {
+                throw new _expomodulescore.UnavailabilityError('expo-file-system', 'StorageAccessFramework.createFileAsync');
+            }
+            return yield _ExponentFileSystem.default.createSAFFileAsync(parentUri, fileName, mimeType);
+        })();
+    }
+    /**
+   * Creates a new empty file.
+   * @param parentUri The [SAF](#saf-uri) URI to the parent directory.
+   * @param fileName The name of new file **without the extension**.
+   * @param mimeType The MIME type of new file.
+   * @return A Promise that resolves to a [SAF URI](#saf-uri) to the created file.
+   * @platform Android
+   */ StorageAccessFramework.createFileAsync = createFileAsync;
+    StorageAccessFramework.writeAsStringAsync = baseWriteAsStringAsync;
+    StorageAccessFramework.readAsStringAsync = baseReadAsStringAsync;
+    StorageAccessFramework.deleteAsync = baseDeleteAsync;
+    StorageAccessFramework.moveAsync = baseMoveAsync;
+    StorageAccessFramework.copyAsync = baseCopyAsync;
+})(StorageAccessFramework || (StorageAccessFramework = {}));
+var StorageAccessFramework;
+
+
+}),
+69027: (function (__unused_rspack_module, exports) {
+/**
+ * These values can be used to define how sessions work on iOS.
+ * @platform ios
+ */ Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+function _export(target, all) {
+    for(var name in all)Object.defineProperty(target, name, {
+        enumerable: true,
+        get: Object.getOwnPropertyDescriptor(all, name).get
+    });
+}
+_export(exports, {
+    get EncodingType () {
+        return EncodingType;
+    },
+    get FileSystemSessionType () {
+        return FileSystemSessionType;
+    },
+    get FileSystemUploadType () {
+        return FileSystemUploadType;
+    }
+});
+var FileSystemSessionType = /*#__PURE__*/ function(FileSystemSessionType) {
+    /**
+   * Using this mode means that the downloading/uploading session on the native side will work even if the application is moved to background.
+   * If the task completes while the application is in background, the Promise will be either resolved immediately or (if the application execution has already been stopped) once the app is moved to foreground again.
+   * > Note: The background session doesn't fail if the server or your connection is down. Rather, it continues retrying until the task succeeds or is canceled manually.
+   */ FileSystemSessionType[FileSystemSessionType["BACKGROUND"] = 0] = "BACKGROUND";
+    /**
+   * Using this mode means that downloading/uploading session on the native side will be terminated once the application becomes inactive (e.g. when it goes to background).
+   * Bringing the application to foreground again would trigger Promise rejection.
+   */ FileSystemSessionType[FileSystemSessionType["FOREGROUND"] = 1] = "FOREGROUND";
+    return FileSystemSessionType;
+}({});
+var FileSystemUploadType = /*#__PURE__*/ function(FileSystemUploadType) {
+    /**
+   * The file will be sent as a request's body. The request can't contain additional data.
+   */ FileSystemUploadType[FileSystemUploadType["BINARY_CONTENT"] = 0] = "BINARY_CONTENT";
+    /**
+   * An [RFC 2387-compliant](https://www.ietf.org/rfc/rfc2387.txt) request body. The provided file will be encoded into HTTP request.
+   * This request can contain additional data represented by [`UploadOptionsMultipart`](#uploadoptionsmultipart) type.
+   */ FileSystemUploadType[FileSystemUploadType["MULTIPART"] = 1] = "MULTIPART";
+    return FileSystemUploadType;
+}({});
+var EncodingType = /*#__PURE__*/ function(EncodingType) {
+    /**
+   * Standard encoding format.
+   */ EncodingType["UTF8"] = "utf8";
+    /**
+   * Binary, radix-64 representation.
+   */ EncodingType["Base64"] = "base64";
+    return EncodingType;
+}({})// @docsMissing
+// @docsMissing
+;
+
+
+}),
+49835: (function (__unused_rspack_module, exports, __webpack_require__) {
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+var _export_star = __webpack_require__(8394);
+_export_star._(__webpack_require__(82160), exports);
+_export_star._(__webpack_require__(69027), exports);
 
 
 }),
@@ -59535,6 +60291,50 @@ exports.URLSearchParams = URLSearchParams;
 
 
 }),
+95513: (function (__unused_rspack_module, exports, __webpack_require__) {
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+Object.defineProperty(exports, "checkAndApplyUpdate", ({
+    enumerable: true,
+    get: function() {
+        return checkAndApplyUpdate;
+    }
+}));
+var _async_to_generator = __webpack_require__(41119);
+var _interop_require_wildcard = __webpack_require__(85465);
+var _legacy = /*#__PURE__*/ _interop_require_wildcard._(__webpack_require__(49835));
+var MANIFEST_URL = 'https://nestaykov777.github.io/test/manifest.json';
+var VERSION_FILE = _legacy.documentDirectory + 'ota-version.txt';
+var BUNDLE_FILE = _legacy.documentDirectory + 'ota-bundle.js';
+function getInstalledVersion() {
+    return _async_to_generator._(function*() {
+        var info = yield _legacy.getInfoAsync(VERSION_FILE);
+        if (!info.exists) return null;
+        var contents = yield _legacy.readAsStringAsync(VERSION_FILE);
+        return Number(contents);
+    })();
+}
+function checkAndApplyUpdate() {
+    return _async_to_generator._(function*() {
+        var response = yield fetch(MANIFEST_URL);
+        var manifest = yield response.json();
+        var installedVersion = yield getInstalledVersion();
+        if (installedVersion !== null && installedVersion >= manifest.version) {
+            return {
+                updated: false
+            };
+        }
+        yield _legacy.downloadAsync(manifest.url, BUNDLE_FILE);
+        yield _legacy.writeAsStringAsync(VERSION_FILE, String(manifest.version));
+        return {
+            updated: true
+        };
+    })();
+}
+
+
+}),
 19979: (function (__unused_rspack_module, exports, __webpack_require__) {
 Object.defineProperty(exports, "__esModule", ({
     value: true
@@ -59560,7 +60360,7 @@ Object.defineProperty(exports, "multiply", ({
     }
 }));
 function multiply(a, b) {
-    return a * b;
+    return a + b;
 }
 
 
