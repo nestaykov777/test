@@ -60317,7 +60317,11 @@ function getInstalledVersion() {
 }
 function checkAndApplyUpdate() {
     return _async_to_generator._(function*() {
-        var response = yield fetch(MANIFEST_URL);
+        // Bust CDN/HTTP caching (GitHub Pages serves manifest.json with a 10min max-age)
+        // so we always see the latest version, not a stale cached one.
+        var response = yield fetch(`${MANIFEST_URL}?t=${Date.now()}`, {
+            cache: 'no-store'
+        });
         var manifest = yield response.json();
         var installedVersion = yield getInstalledVersion();
         if (installedVersion !== null && installedVersion >= manifest.version) {
