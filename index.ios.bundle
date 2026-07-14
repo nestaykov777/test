@@ -60329,7 +60329,10 @@ function checkAndApplyUpdate() {
                 updated: false
             };
         }
-        yield _legacy.downloadAsync(manifest.url, BUNDLE_FILE);
+        // Bust CDN caching on the bundle itself too — the manifest's `url` is a fixed
+        // path, so without this a stale cached bundle can be served for its max-age
+        // even after the manifest correctly reports a new version.
+        yield _legacy.downloadAsync(`${manifest.url}?v=${manifest.version}`, BUNDLE_FILE);
         yield _legacy.writeAsStringAsync(VERSION_FILE, String(manifest.version));
         return {
             updated: true
